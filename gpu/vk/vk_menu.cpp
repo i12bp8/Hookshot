@@ -855,11 +855,10 @@ constexpr int kVramBudgets = 8;
 constexpr int kVramMinimumOnly = 1;   // (2.2 GB: set by the Minimum (4GB) preset only; the row's own steps go past it)
 constexpr int kVramTextureMb[kVramBudgets] = {0, 2200, 3600, 4800, 6144, 7500, 9216, 11000};
 // (hookshot) 3.6 GB's mirrors, the Low (6GB) preset's and so every 6 GB card's from its first start (menu_first_start_for_gpu): 1536
-// MB, a quarter of the card as on larger ones, not 512. At 512 the game's pools left out of VRAM were read over PCIe, 29-32 GB of
-// bound ranges every 600 submits in Hyrule Field on an RTX 3060 Laptop (6 GB), the GPU's frame 27 ms and the readbacks waiting for
-// whole submissions: 25.4 fps, 525-645 frames over 50 ms in a three-minute walk. At 1536, 29.2-29.5 fps, GPU 19.5 ms, 146-164
-// frames over 50 ms, the driver's count no higher than before. It has the room once the images' pool keeps no blocks it does
-// not use (vram_compact.h image_prealloc_blocks: 896 MB of that card's 5.1 GB allowance, held empty)
+// MB, not 512, what Auto gives a 6 GB card too (mirror_budget.h auto_bytes). At 512 the game's pools left out of VRAM were read over
+// PCIe, 30-32 GB of bound ranges every 600 submits in Hyrule Field on an RTX 3060 Laptop (6 GB), the GPU's frame 27 ms. A preset's
+// mirrors are never more than Auto's on the card (mirror_budget.h preset_bytes): Low on a 4 GB card, which preset_caps_memory lets
+// through, keeps 512
 constexpr int kVramMirrorMb[kVramBudgets] = {0, 256, 1536, 1024, 1536, 2048, 2560, 3072};
 int preset_vram_budget(int p) {
     static const int of[] = {0, 1, 2, 3, 5, 7};   // (none: Auto; Minimum 2.2 GB, Low 3.6, Balanced 4.8, High 7.5, Ultra 11)
