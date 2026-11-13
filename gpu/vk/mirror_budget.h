@@ -9,9 +9,11 @@ namespace mkwvk::mirror_rule {
 
 /// Auto's mirrors: a quarter of the card, at most 3 GB, and an eighth on a card of 4.5 GB or less (512 MB on 4 GB). A pool left out
 /// is read by the GPU over PCIe: on 8 GB cards, a 3070 or a 4060, that left the GPU at a few percent and the frame stuttering, and
-/// on a 6 GB RTX 3060 Laptop at an eighth (768 MB) or the Low preset's 512 MB, 30-32 GB of bound ranges went over PCIe every 600
-/// submits in Hyrule Field, the GPU's frame 27 ms against 19 at a quarter. 6 GB cards had an eighth because, with a quarter, the
-/// mirrors and the textures went past what the card has; the image blocks made at the start were then 896 MB of it held empty,
+/// on a 6 GB RTX 3060 Laptop at an eighth (768 MB) or the Low preset's 512 MB, a 224 MB and a 152 MB pool stayed out: 58-59 GB of
+/// bound ranges read in guest memory every 600 submits outside the log in Hyrule Field, the GPU's frame 45-49 ms, the readbacks held
+/// to their submission's end, 16.5-17.9 fps; at a quarter none, 14-18 ms, 41-47 fps (main 4dd972a8). 1024 MB gave 36-40 fps in two
+/// runs and 16.5 in a third: a budget the pools only just fit is filled first come, first served. 6 GB cards had an eighth because, with a quarter,
+/// the mirrors and the textures went past what the card has; the image blocks made at the start were then 896 MB of it held empty,
 /// and since #2711 they are made in the textures' pool, where the textures take them
 inline uint64_t auto_bytes(uint64_t vram) {
     if (!vram) return 3072ull << 20;
